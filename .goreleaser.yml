@@ -1,0 +1,64 @@
+before:
+  hooks:
+    - go mod download
+
+builds:
+  -
+    id: "client"
+    dir: "."
+    ldflags:
+      - -s -w -X main.version={{.Version}} -X main.date={{.CommitDate}} 
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+release:
+  prerelease: true
+
+archives:
+  - replacements:
+      darwin: Darwin
+      linux: Linux
+      amd64: x86_64
+    wrap_in_directory: true
+    format_overrides:
+    - goos: darwin
+      format: zip
+
+nfpms:
+  -
+    replacements:
+      darwin: macOS
+      linux: Linux
+    vendor: grimdork.net
+    homepage:
+    maintainer: Ronny Bangsund <github@grimdork.net>
+    description:
+    formats:
+      - apk
+      - deb
+      - rpm
+    dependencies:
+      - prometheus
+    bindir: /usr/bin
+    section: contrib
+    priority: extra
+    
+checksum:
+  name_template: 'checksums.txt'
+snapshot:
+  name_template: "{{ .Tag }}-next"
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^docs:'
+      - '^test:'
+
+signs:
+  - artifacts: checksum
+    args: ["--batch", "-u", "{{ .Env.GPG_FINGERPRINT }}", "--output", "${signature}", "--detach-sign", "${artifact}"]
