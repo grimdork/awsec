@@ -10,7 +10,7 @@ import "github.com/Urethramancer/signor/opt"
 // RenameCmd options.
 type RenameCmd struct {
 	opt.DefaultHelp
-	Key string `placeholder:"KEY" help:"Key to tag."`
+	Key string `placeholder:"KEY" help:"Old key name."`
 	New string `placeholder:"NAME" help:"New name for the key. Contents will be unchanged."`
 }
 

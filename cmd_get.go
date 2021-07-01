@@ -32,7 +32,7 @@ func (cmd *GetCmd) Run(in []string) error {
 	}
 
 	param, err := client.GetParameter(context.Background(), &ssm.GetParameterInput{
-		Name:           aws.String(cmd.Key),
+		Name:           aws.String(validKey(cmd.Key)),
 		WithDecryption: true,
 	})
 

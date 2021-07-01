@@ -9,10 +9,12 @@ import (
 
 var o struct {
 	opt.DefaultHelp
-	List   ListCmd `command:"list" help:"List keys." aliases:"ls"`
-	Get    GetCmd  `command:"get" help:"Get values." aliases:"g"`
-	Set    SetCmd  `command:"set" help:"Set values." aliases:"s"`
-	Rename ListCmd `command:"rename" help:"Rename keys." aliases:"rn"`
+	List   ListCmd   `command:"list" help:"List keys." aliases:"ls"`
+	Get    GetCmd    `command:"get" help:"Get value(s) for a key." aliases:"g"`
+	Set    SetCmd    `command:"set" help:"Set the value for a key." aliases:"s"`
+	Tag    TagCmd    `command:"tag" help:"Add tags to a key." aliases:"t"`
+	Rename RenameCmd `command:"rename" help:"Rename key." aliases:"rn"`
+	Remove RemoveCmd `command:"remove" help:"Remove key." aliases:"rm"`
 }
 
 func init() {

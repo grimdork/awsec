@@ -37,7 +37,7 @@ func (cmd *ListCmd) Run(in []string) error {
 	filter := types.ParameterStringFilter{
 		Key:    aws.String("Name"),
 		Option: aws.String("BeginsWith"),
-		Values: []string{cmd.Filter},
+		Values: []string{validKey(cmd.Filter)},
 	}
 	input := &ssm.DescribeParametersInput{
 		MaxResults:       25,

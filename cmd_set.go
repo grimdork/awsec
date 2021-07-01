@@ -35,7 +35,7 @@ func (cmd *SetCmd) Run(in []string) error {
 	}
 
 	ppi := &ssm.PutParameterInput{
-		Name:        aws.String(cmd.Key),
+		Name:        aws.String(validKey(cmd.Key)),
 		Value:       aws.String(cmd.Value),
 		Description: aws.String(cmd.Desc),
 		Type:        types.ParameterTypeString,
