@@ -17,10 +17,11 @@ import (
 // SetCmd options.
 type SetCmd struct {
 	opt.DefaultHelp
-	Key   string `placeholder:"KEY" help:"Key to set."`
-	Value string `placeholder:"VALUE" help:"Value for the key."`
-	Desc  string `short:"d" placeholder:"DESCRIPTION" help:"Also set a description for the key."`
-	List  bool   `short:"l" help:"The value is a comma-separated StringList."`
+	Key    string `placeholder:"KEY" help:"Key to set. Any existing key with that name will be replaced."`
+	Value  string `placeholder:"VALUE" help:"Value for the key."`
+	Desc   string `short:"d" placeholder:"DESCRIPTION" help:"Also set a description for the key."`
+	List   bool   `short:"l" help:"The value is a comma-separated StringList."`
+	Secure bool   `short:"s" help:"Enable encryption for this key. It will be stored as a regular String."`
 }
 
 func (cmd *SetCmd) Run(in []string) error {
@@ -33,16 +34,22 @@ func (cmd *SetCmd) Run(in []string) error {
 		return nil
 	}
 
-	out, err := svc.PutParameter(context.Background(), &ssm.PutParameterInput{
+	ppi := &ssm.PutParameterInput{
 		Name:        aws.String(cmd.Key),
 		Value:       aws.String(cmd.Value),
-		Description: aws.String(""),
+		Description: aws.String(cmd.Desc),
 		Type:        types.ParameterTypeString,
-	})
-	if err != nil {
-		return err
+		Overwrite:   true,
 	}
 
-	pr("%+v", out)
-	return nil
+	if cmd.List {
+		ppi.Type = types.ParameterTypeStringList
+	}
+
+	if cmd.Secure {
+		ppi.Type = types.ParameterTypeSecureString
+	}
+
+	_, err = svc.PutParameter(context.Background(), ppi)
+	return err
 }

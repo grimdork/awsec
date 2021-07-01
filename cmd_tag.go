@@ -7,15 +7,15 @@ package main
 
 import "github.com/Urethramancer/signor/opt"
 
-// RenameCmd options.
-type RenameCmd struct {
+// TagCmd options.
+type TagCmd struct {
 	opt.DefaultHelp
-	Key string `placeholder:"KEY" help:"Key to tag."`
-	New string `placeholder:"NAME" help:"New name for the key. Contents will be unchanged."`
+	Key    string `placeholder:"KEY" help:"Key to tag."`
+	Remove bool   `short:"r" help:"Remove tags from the key."`
 }
 
-// Run rename.
-func (cmd *RenameCmd) Run(in []string) error {
+// Run tag.
+func (cmd *TagCmd) Run(in []string) error {
 	if cmd.Help || cmd.Key == "" {
 		return opt.ErrUsage
 	}
