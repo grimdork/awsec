@@ -20,3 +20,11 @@ func getClient() (*ssm.Client, error) {
 
 	return ssm.NewFromConfig(cfg), nil
 }
+
+func validKey(k string) string {
+	if k[0] != '/' {
+		return "/" + k
+	}
+
+	return k
+}
