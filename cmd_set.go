@@ -35,11 +35,15 @@ func (cmd *SetCmd) Run(in []string) error {
 	}
 
 	ppi := &ssm.PutParameterInput{
-		Name:        aws.String(validKey(cmd.Key)),
-		Value:       aws.String(cmd.Value),
-		Description: aws.String(cmd.Desc),
-		Type:        types.ParameterTypeString,
-		Overwrite:   true,
+		Name:  aws.String(validKey(cmd.Key)),
+		Value: aws.String(cmd.Value),
+		// Once the type is set, this is what a key will always be. It must be removed to change.
+		Type: types.ParameterTypeString,
+		// We always want to overwrite, for convenience. Better lock down those permissions.
+		Overwrite: true,
+	}
+	if cmd.Desc != "" {
+		ppi.Description = aws.String(cmd.Desc)
 	}
 
 	if cmd.List {
@@ -48,6 +52,14 @@ func (cmd *SetCmd) Run(in []string) error {
 
 	if cmd.Secure {
 		ppi.Type = types.ParameterTypeSecureString
+	}
+
+	if cmd.List || cmd.Secure {
+		// If we change the type to a list or more secure storage, we must delete the old key.
+		_, err = svc.DeleteParameter(context.Background(), &ssm.DeleteParameterInput{Name: aws.String(validKey(cmd.Key))})
+		if err != nil {
+			return err
+		}
 	}
 
 	_, err = svc.PutParameter(context.Background(), ppi)
