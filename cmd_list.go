@@ -66,7 +66,7 @@ func (cmd *ListCmd) Run(in []string) error {
 				}
 				fmt.Fprintf(w, "%s\t%s\t%s\n", *p.Name, p.LastModifiedDate.String(), *p.Description)
 			} else {
-				fmt.Fprintf(w, "%s\t%s\n", *p.Name, p.LastModifiedDate.String())
+				fmt.Fprintf(w, "%s\t%s\n", *p.Name, p.LastModifiedDate.Local().String())
 			}
 		}
 
