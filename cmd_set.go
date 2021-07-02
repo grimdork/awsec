@@ -56,10 +56,8 @@ func (cmd *SetCmd) Run(in []string) error {
 
 	if cmd.List || cmd.Secure {
 		// If we change the type to a list or more secure storage, we must delete the old key.
-		_, err = svc.DeleteParameter(context.Background(), &ssm.DeleteParameterInput{Name: aws.String(validKey(cmd.Key))})
-		if err != nil {
-			return err
-		}
+		_, _ = svc.DeleteParameter(context.Background(), &ssm.DeleteParameterInput{Name: aws.String(validKey(cmd.Key))})
+		// We don't care if it fails - usually means it didn't exist, and any major failures are caught in the next call.
 	}
 
 	_, err = svc.PutParameter(context.Background(), ppi)
