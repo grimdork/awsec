@@ -39,11 +39,9 @@ nfpms:
     maintainer: Ronny Bangsund <github@grimdork.net>
     description:
     formats:
-      - apk
       - deb
       - rpm
     dependencies:
-      - prometheus
     bindir: /usr/bin
     section: contrib
     priority: extra
