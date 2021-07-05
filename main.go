@@ -13,7 +13,7 @@ var o struct {
 	Get    GetCmd    `command:"get" help:"Get value(s) for a key." aliases:"g"`
 	Set    SetCmd    `command:"set" help:"Set the value for a key." aliases:"s"`
 	Tag    TagCmd    `command:"tag" help:"Add tags to a key." aliases:"t"`
-	Rename RenameCmd `command:"rename" help:"Rename key." aliases:"rn"`
+	Rename RenameCmd `command:"rename" help:"Rename key." aliases:"ren,r"`
 	Remove RemoveCmd `command:"remove" help:"Remove key." aliases:"rm"`
 }
 

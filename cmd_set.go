@@ -7,6 +7,7 @@ package main
 
 import (
 	"context"
+	"os"
 
 	"github.com/Urethramancer/signor/opt"
 	"github.com/aws/aws-sdk-go-v2/aws"
@@ -21,7 +22,8 @@ type SetCmd struct {
 	Value  string `placeholder:"VALUE" help:"Value for the key."`
 	Desc   string `short:"d" placeholder:"DESCRIPTION" help:"Also set a description for the key."`
 	List   bool   `short:"l" help:"The value is a comma-separated StringList."`
-	Secure bool   `short:"s" help:"Enable encryption for this key. It will be stored as a regular String."`
+	Secure bool   `short:"s" help:"Enable encryption (SecureString) for this key."`
+	File   bool   `short:"f" help:"The value is a filename to import as the contents for the key value. Max 4096 bytes."`
 }
 
 func (cmd *SetCmd) Run(in []string) error {
@@ -52,6 +54,15 @@ func (cmd *SetCmd) Run(in []string) error {
 
 	if cmd.Secure {
 		ppi.Type = types.ParameterTypeSecureString
+	}
+
+	if cmd.File {
+		data, err := os.ReadFile(cmd.Value)
+		if err != nil {
+			return err
+		}
+
+		ppi.Value = aws.String(string(data))
 	}
 
 	if cmd.List || cmd.Secure {
