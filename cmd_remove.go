@@ -31,7 +31,7 @@ func (cmd *RemoveCmd) Run(in []string) error {
 		return nil
 	}
 
-	if !askString("Are you sure you want to delete that key?") {
+	if !askString("Are you sure you want to delete this key?") {
 		return nil
 	}
 
