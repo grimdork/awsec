@@ -6,7 +6,10 @@
 package main
 
 import (
+	"bufio"
 	"context"
+	"os"
+	"strings"
 
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/ssm"
@@ -27,4 +30,11 @@ func validKey(k string) string {
 	}
 
 	return k
+}
+
+func askString(q string) string {
+	r := bufio.NewReader(os.Stdin)
+	print(q)
+	res, _ := r.ReadString('\n')
+	return strings.ReplaceAll(res, "\n", "")
 }
