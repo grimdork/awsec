@@ -5,7 +5,13 @@
 
 package main
 
-import "github.com/Urethramancer/signor/opt"
+import (
+	"context"
+
+	"github.com/Urethramancer/signor/opt"
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/ssm"
+)
 
 // RemoveCmd options.
 type RemoveCmd struct {
@@ -18,6 +24,19 @@ type RemoveCmd struct {
 func (cmd *RemoveCmd) Run(in []string) error {
 	if cmd.Help || cmd.Key == "" {
 		return opt.ErrUsage
+	}
+
+	client, err := getClient()
+	if err != nil {
+		return nil
+	}
+
+	a := askString("Are you sure you want to delete that key? [y/N] ")
+	if a == "y" || a == "Y" {
+		_, err = client.DeleteParameter(context.Background(), &ssm.DeleteParameterInput{
+			Name: aws.String(cmd.Key),
+		})
+		return err
 	}
 
 	return nil
