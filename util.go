@@ -32,9 +32,14 @@ func validKey(k string) string {
 	return k
 }
 
-func askString(q string) string {
+func askString(q string) bool {
 	r := bufio.NewReader(os.Stdin)
-	print(q)
+	print(q + " [y/N] ")
 	res, _ := r.ReadString('\n')
-	return strings.ReplaceAll(res, "\n", "")
+	res = strings.ReplaceAll(res, "\n", "")
+	if res == "y" || res == "Y" {
+		return true
+	}
+
+	return false
 }

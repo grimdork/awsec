@@ -31,13 +31,13 @@ func (cmd *RemoveCmd) Run(in []string) error {
 		return nil
 	}
 
-	a := askString("Are you sure you want to delete that key? [y/N] ")
-	if a == "y" || a == "Y" {
-		_, err = client.DeleteParameter(context.Background(), &ssm.DeleteParameterInput{
-			Name: aws.String(cmd.Key),
-		})
-		return err
+	if !askString("Are you sure you want to delete that key?") {
+		return nil
 	}
 
-	return nil
+	_, err = client.DeleteParameter(context.Background(), &ssm.DeleteParameterInput{
+		Name: aws.String(cmd.Key),
+	})
+	return err
+
 }
