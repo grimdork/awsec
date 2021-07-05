@@ -2,7 +2,7 @@
 Store secrets in AWS Parameter Store.
 
 ## What
-This tools treats Amazon Web Services Parameter Store as a repository for secrets. Simple strings, encrypted strings (with KMS keys) and string lists are supported there, and this tool helps set and retrieve them more conveniently.
+This tool treats Amazon Web Services Parameter Store as a repository for secrets. Simple strings, encrypted strings (with KMS keys) and string lists are supported there, and this tool helps set and retrieve them more conveniently.
 
 ## Installing
 Download one of the packages from the latest version, or install from source if you have Go installed:
