@@ -63,7 +63,7 @@ func (cmd *TagCmd) Run(in []string) error {
 	}
 
 	_, err = client.AddTagsToResource(context.Background(), &ssm.AddTagsToResourceInput{
-		ResourceId:   aws.String(cmd.Key),
+		ResourceId:   aws.String(validKey(cmd.Key)),
 		ResourceType: types.ResourceTypeForTaggingParameter,
 		Tags:         list,
 	})
