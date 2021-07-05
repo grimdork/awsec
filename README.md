@@ -67,10 +67,12 @@ puts the contents of the file `prod-web.pem` into the key `secrets/ssh/prod-web`
 ### Tag a secret
 AWS allows keys to have tags in addition to descriptions. Tags are used for many things, including filtering billing information. For example:
 ```
-sec tag secrets/ssh/prod-web customer internal
+sec tag secrets/ssh/prod-web -t customer=internal
 ```
 
 This command updates the secret `secrets/ssh/prod-web` and sets the tag `customer` to `internal`.
+
+NOTE: Each AWS resource can have a maximum of 50 tags.
 
 ### Rename a key
 You can rename a key (sort of) like this:
