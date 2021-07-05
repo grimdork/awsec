@@ -31,7 +31,7 @@ func (cmd *SetCmd) Run(in []string) error {
 		return opt.ErrUsage
 	}
 
-	svc, err := getClient()
+	client, err := getClient()
 	if err != nil {
 		return nil
 	}
@@ -67,10 +67,10 @@ func (cmd *SetCmd) Run(in []string) error {
 
 	if cmd.List || cmd.Secure {
 		// If we change the type to a list or more secure storage, we must delete the old key.
-		_, _ = svc.DeleteParameter(context.Background(), &ssm.DeleteParameterInput{Name: aws.String(validKey(cmd.Key))})
+		_, _ = client.DeleteParameter(context.Background(), &ssm.DeleteParameterInput{Name: aws.String(validKey(cmd.Key))})
 		// We don't care if it fails - usually means it didn't exist, and any major failures are caught in the next call.
 	}
 
-	_, err = svc.PutParameter(context.Background(), ppi)
+	_, err = client.PutParameter(context.Background(), ppi)
 	return err
 }
