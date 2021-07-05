@@ -5,10 +5,15 @@ Store secrets in AWS Parameter Store.
 This tool treats Amazon Web Services Parameter Store as a repository for secrets. Simple strings, encrypted strings (with KMS keys) and string lists are supported there, and this tool helps set and retrieve them more conveniently.
 
 ## Installing
-Download one of the packages from the latest version, or install from source if you have Go installed:
+Your options:
+1. Download a suitable package from [the official package page](https://github.com/grimdork/sec/releases)
+2. Install from source if you have Go installed:
+
 ```
 go get -u github.com/grimdork/sec
 ```
+
+Or just clone the project if you want to contribute.
 
 ## Setup
 Everything needed to make `aws-cli` run should already be set up. If your company uses Parameter Store, you probably also use AWS tools. Talk to your friendly local whatever for help.
