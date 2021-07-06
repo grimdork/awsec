@@ -4,6 +4,11 @@ retract (
 	v0.5.0
 	v0.6.0
 	v0.6.1 // No earlier version could be considered an MVP.
+	v0.7.0
+	v0.7.1
+	v0.7.2
+	v0.7.3
+	v0.7.4 // Last version without the minimum package formats and publishing.
 )
 
 go 1.16
