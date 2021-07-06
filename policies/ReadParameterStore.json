@@ -1,0 +1,27 @@
+{
+	"Version": "2012-10-17",
+	"Statement": [
+		{
+			"Sid": "sec0",
+			"Effect": "Allow",
+			"Action": "ssm:DescribeParameters",
+			"Resource": "*"
+		},
+		{
+			"Sid": "sec1",
+			"Effect": "Allow",
+			"Action": [
+				"ssm:GetParametersByPath",
+				"ssm:GetParameters",
+				"ssm:GetParameter"
+			],
+			"Resource": "arn:aws:ssm:*:*:parameter/secret*"
+		},
+		{
+			"Sid": "sec2",
+			"Effect": "Deny",
+			"Action": "ssm:GetParameter*",
+			"Resource": "arn:aws:ssm:*:*:parameter/infra*"
+		}
+	]
+}
