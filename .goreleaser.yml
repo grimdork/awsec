@@ -28,10 +28,10 @@ archives:
     format_overrides:
     - goos: darwin
       format: zip
-  files:
-    - LICENSE
-    - README.md
-    - policies/*
+    files:
+      - LICENSE
+      - README.md
+      - policies/*
 
 brews:
   -
