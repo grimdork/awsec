@@ -18,7 +18,10 @@ var o struct {
 	Version VersionCmd `command:"version" help:"Show version information." aliases:"ver,v"`
 }
 
-var version = "dev"
+var (
+	version = "dev"
+	date    = "undefined"
+)
 
 func init() {
 	os.Setenv("AWS_SDK_LOAD_CONFIG", "true")
