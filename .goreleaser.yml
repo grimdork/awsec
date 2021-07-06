@@ -62,6 +62,15 @@ nfpms:
     bindir: /usr/bin
     section: contrib
     priority: extra
+    contents:
+      - src: LICENSE
+        dst: /usr/share/doc/LICENSE
+
+      - src: README.md
+        dst: /usr/share/doc/README.md
+
+      - src: policies/*
+        dst: /usr/share/doc/examples/policies/
 
 checksum:
   name_template: 'checksums.txt'
