@@ -1,5 +1,11 @@
 module github.com/grimdork/sec
 
+retract (
+	v0.5.0
+	v0.6.0
+	v0.6.1 // No earlier version could be considered an MVP.
+)
+
 go 1.16
 
 require (
