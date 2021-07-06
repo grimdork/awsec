@@ -79,7 +79,7 @@ This command updates the secret `secrets/ssh/prod-web` and sets the tag `custome
 
 NOTE: Each AWS resource can have a maximum of 50 tags.
 
-### Rename a key
+### Rename a secret
 You can rename a key (sort of) like this:
 ```
 sec rename secrets/ssh/prod-web secrets/ssh/prod-old-web
