@@ -45,7 +45,20 @@ nfpms:
     bindir: /usr/bin
     section: contrib
     priority: extra
-    
+
+brews:
+  -
+    tap:
+      owner: grimdork
+      name: homebrew-tools
+    commit_author:
+      name: Urethramancer
+      email: github@grimdiork.net
+    homepage: "https://github.com/grimdork/sec"
+    description: "Store secrets in AWS Parameter Store."
+    license: "MIT"
+    skip_upload: auto
+
 checksum:
   name_template: 'checksums.txt'
 snapshot:
