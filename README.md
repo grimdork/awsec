@@ -5,18 +5,31 @@ Store secrets in AWS Parameter Store.
 This tool treats Amazon Web Services Parameter Store as a repository for secrets. Simple strings, encrypted strings (with KMS keys) and string lists are supported there, and this tool helps set and retrieve them more conveniently.
 
 ## Installing
-Your options:
-1. Download a suitable package from [the official package page](https://github.com/grimdork/sec/releases)
-2. Install from source if you have Go installed:
 
+### Install from source
+If you have Go v1.16 or later installed:
 ```
 go get -u github.com/grimdork/sec
 ```
 
-Or just clone the project if you want to contribute.
+Or just clone the project with `git clone git@github.com:grimdork/sec.git` if you want to contribute.
+
+### Download packages directly
+Download a suitable package from [the official package page](https://github.com/grimdork/sec/releases).
+
+### Homebrew
+If you have Homebrew installed on macOS:
+```
+brew tap grimdork/tools
+brew install grimdork/tools/sec
+```
 
 ## Setup
-Everything needed to make `aws-cli` run should already be set up. If your company uses Parameter Store, you probably also use AWS tools. Talk to your friendly local whatever for help.
+Everything needed to make `aws-cli` run should already be set up. If your company uses Parameter Store, you probably also use AWS tools. You need two comfiguration files at minimum:
+- ~/.aws/config
+- ~/.aws/credentials
+
+Check AWS documentation for specifics.
 
 ## How
 
