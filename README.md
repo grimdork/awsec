@@ -21,7 +21,7 @@ Download a suitable package from [the official package page](https://github.com/
 If you have Homebrew installed on macOS:
 ```
 brew tap grimdork/tools
-brew install grimdork/tools/sec
+brew install grimdork/tools/awsec
 ```
 
 ## Setup
