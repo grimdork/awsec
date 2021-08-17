@@ -28,7 +28,9 @@ archives:
     wrap_in_directory: true
     format_overrides:
     - goos: darwin
-      format: zip
+      format: tar.xz
+    - goos: linux
+      format: tar.xz
     files:
       - LICENSE
       - README.md
