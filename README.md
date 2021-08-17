@@ -1,4 +1,4 @@
-# sec
+# awsec
 Store secrets in AWS Parameter Store.
 
 ## What
@@ -36,14 +36,14 @@ Check AWS documentation for specifics.
 ### List secrets
 The simplest invocation lists all secrets in your configured AWS account:
 ```
-sec ls
+awsec ls
 ```
 
 This lists every secret in the configured parameter store.
 
 You can also specify the beginning portion of keys to narrow down the list:
 ```
-sec ls secrets/internal
+awsec ls secrets/internal
 ```
 
 NOTE:
@@ -53,39 +53,39 @@ NOTE:
 
 ### Get a secret
 ```
-sec get secrets/internal/dbpasswords
+awsec get secrets/internal/dbpasswords
 ````
 retrieves a parameter named `/secrets/internal/dbpasswords` from the Parameter Store, provided that you have permission to do so.
 
 
 ### Set a secret
 ```
-sec set secrets/internal/testpw 123456 -s
+awsec set secrets/internal/testpw 123456 -s
 ````
 sets the key `secrets/internal/testpw` to `123456` and flags it as secure, which enables AWS KMS encryption.
 
 You can also set string lists (comma-separated values):
 ```
-sec set secrets/internal/var-list one,1,two,2 -l
+awsec set secrets/internal/var-list one,1,two,2 -l
 ```
 
 This sets four values, which well be presented in pairs when you use `get`. This is useful for small configuration files. Technically it's also usable for password lists, but if you want the maximum security use Securestring and split them up.
 
 The `-d` flag allows you to set a description for a key:
 ```
-sec set -d "This key is a test." secrets/test "This is the test key's value."
+awsec set -d "This key is a test." secrets/test "This is the test key's value."
 ```
 
 Finally, it's also possibly to set a key value from a file:
 ```
-sec set -f secrets/ssh/prod-web prod-web.pem
+awsec set -f secrets/ssh/prod-web prod-web.pem
 ````
 puts the contents of the file `prod-web.pem` into the key `secrets/ssh/prod-web`.
 
 ### Tag a secret
 AWS allows keys to have tags in addition to descriptions. Tags are used for many things, including filtering billing information. For example:
 ```
-sec tag secrets/ssh/prod-web -t customer=internal
+awsec tag secrets/ssh/prod-web -t customer=internal
 ```
 
 This command updates the secret `secrets/ssh/prod-web` and sets the tag `customer` to `internal`.
@@ -95,7 +95,7 @@ NOTE: Each AWS resource can have a maximum of 50 tags.
 ### Rename a secret
 You can rename a key (sort of) like this:
 ```
-sec rename secrets/ssh/prod-web secrets/ssh/prod-old-web
+awsec rename secrets/ssh/prod-web secrets/ssh/prod-old-web
 ````
 
 This copies the contents of `secrets/ssh/prod-web` to a key named `secrets/ssh/prod-old-web` and deletes `secrets/ssh/prod-web`.
@@ -104,6 +104,6 @@ NOTE: If removal fails because of lacking permissions, you may end up with a dup
 
 ### Remove a key
 ```
-sec rm secrets/ssh/prod-web
+awsec rm secrets/ssh/prod-web
 ```
 removes the key `secrets/ssh/prod-web`, asking to confirm. Use the `-f` flag to skip the question.
