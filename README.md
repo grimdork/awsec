@@ -1,4 +1,4 @@
-# awsec
+# awsec [![CodeQL](https://github.com/grimdork/awsec/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/grimdork/awsec/actions/workflows/codeql-analysis.yml) [![goreleaser](https://github.com/grimdork/awsec/actions/workflows/release.yml/badge.svg)](https://github.com/grimdork/awsec/actions/workflows/release.yml)
 Store secrets in AWS Parameter Store.
 
 ## What
