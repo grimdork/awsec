@@ -44,7 +44,7 @@ brews:
     commit_author:
       name: Urethramancer
       email: github@grimdiork.net
-    homepage: "https://github.com/grimdork/sec"
+    homepage: "https://github.com/grimdork/awsec"
     description: "Store secrets in AWS Parameter Store."
     license: "MIT"
     skip_upload: auto
