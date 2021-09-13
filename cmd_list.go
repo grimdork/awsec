@@ -7,6 +7,7 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"os"
 	"text/tabwriter"
@@ -21,7 +22,7 @@ import (
 type ListCmd struct {
 	opt.DefaultHelp
 	Filter string `placeholder:"FILTER" help:"Lists all keys starting with this." default:"/"`
-	Desc   bool   `short:"d" help:"Include description."`
+	Output string `short:"o" help:"Output format." choices:"table,compact,json" default:"table"`
 }
 
 func (cmd *ListCmd) Run(in []string) error {
@@ -45,11 +46,12 @@ func (cmd *ListCmd) Run(in []string) error {
 	}
 
 	w := &tabwriter.Writer{}
-	w.Init(os.Stdout, 0, 8, 1, '\t', 0)
-	if cmd.Desc {
+	jsonout := jsonSecrets{}
+	switch cmd.Output {
+	case "json":
+	default:
+		w.Init(os.Stdout, 0, 8, 1, '\t', 0)
 		fmt.Fprintln(w, "Secret\tLast modified\tDescription")
-	} else {
-		fmt.Fprintln(w, "Secret\tLast modified")
 	}
 
 	loop := true
@@ -60,13 +62,22 @@ func (cmd *ListCmd) Run(in []string) error {
 		}
 
 		for _, p := range po.Parameters {
-			if cmd.Desc {
-				if p.Description == nil {
-					p.Description = aws.String("")
+			if p.Description == nil {
+				p.Description = aws.String("")
+			}
+
+			s := fmt.Sprintf("%s\t%s\t%s\n", *p.Name, p.LastModifiedDate.String(), *p.Description)
+			switch cmd.Output {
+			case "json":
+				e := jsonSecret{
+					Name:        *p.Name,
+					LastMod:     p.LastModifiedDate.String(),
+					Description: *p.Description,
 				}
-				fmt.Fprintf(w, "%s\t%s\t%s\n", *p.Name, p.LastModifiedDate.String(), *p.Description)
-			} else {
-				fmt.Fprintf(w, "%s\t%s\n", *p.Name, p.LastModifiedDate.Local().String())
+
+				jsonout.Secrets = append(jsonout.Secrets, e)
+			default:
+				fmt.Fprint(w, s)
 			}
 		}
 
@@ -76,7 +87,29 @@ func (cmd *ListCmd) Run(in []string) error {
 			input.NextToken = po.NextToken
 		}
 	}
-	w.Flush()
+
+	switch cmd.Output {
+	case "json":
+		data, err := json.MarshalIndent(jsonout, "", "\t")
+		if err != nil {
+			return err
+		}
+
+		fmt.Printf("%s\n", data)
+	default:
+		w.Flush()
+	}
 
 	return nil
+}
+
+type jsonSecrets struct {
+	Secrets []jsonSecret `json:"secrets"`
+}
+
+type jsonSecret struct {
+	Name        string `json:"secret"`
+	LastMod     string `json:"last_modified"`
+	Description string `json:"description,omitempty"`
+	Contents    string `json:"contents,omitempty"`
 }
