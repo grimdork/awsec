@@ -49,6 +49,9 @@ func (cmd *ListCmd) Run(in []string) error {
 	jsonout := jsonSecrets{}
 	switch cmd.Output {
 	case "json":
+	case "compact":
+		w.Init(os.Stdout, 0, 8, 1, '\t', 0)
+		fmt.Fprintln(w, "Secret,Last modified")
 	default:
 		w.Init(os.Stdout, 0, 8, 1, '\t', 0)
 		fmt.Fprintln(w, "Secret\tLast modified\tDescription")
@@ -76,6 +79,10 @@ func (cmd *ListCmd) Run(in []string) error {
 				}
 
 				jsonout.Secrets = append(jsonout.Secrets, e)
+			case "compact":
+				t := p.LastModifiedDate
+				date := fmt.Sprintf("%04d%02d%02d%02d%02d%02d", t.Year(), t.Month(), t.Day(), t.Hour(), t.Minute(), t.Second())
+				fmt.Fprintf(w, "%s,%s\n", *p.Name, date)
 			default:
 				fmt.Fprint(w, s)
 			}
