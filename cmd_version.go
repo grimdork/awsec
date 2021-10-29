@@ -10,6 +10,6 @@ type VersionCmd struct{}
 
 // Run tag.
 func (cmd *VersionCmd) Run(in []string) error {
-	pr("sec version %s (%s)", version, date)
+	pr("awsec version %s (%s)", version, date)
 	return nil
 }
