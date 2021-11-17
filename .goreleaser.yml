@@ -8,12 +8,13 @@ builds:
     id: "client"
     dir: "."
     ldflags:
-      - -s -w -X main.version={{.Version}} -X main.date={{.CommitDate}} 
+      - -s -w -X main.version={{.Version}} -X main.date={{.CommitDate}}
     env:
       - CGO_ENABLED=0
     goos:
       - linux
       - darwin
+      - freebsd
     goarch:
       - amd64
       - arm64
