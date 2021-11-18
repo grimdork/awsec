@@ -18,7 +18,7 @@ Or just clone the project with `git clone git@github.com:grimdork/awsec.git` if 
 Download a suitable package from [the official package page](https://github.com/grimdork/awsec/releases).
 
 ### Homebrew
-If you have Homebrew installed on macOS:
+If you have Homebrew installed on macOS or Linux:
 ```
 brew tap grimdork/tools
 brew install grimdork/tools/awsec
