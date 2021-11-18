@@ -41,7 +41,7 @@ func (cmd *ListCmd) Run(in []string) error {
 		Values: []string{validKey(cmd.Filter)},
 	}
 	input := &ssm.DescribeParametersInput{
-		MaxResults:       25,
+		MaxResults:       50,
 		ParameterFilters: []types.ParameterStringFilter{filter},
 	}
 
