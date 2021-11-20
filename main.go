@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/Urethramancer/signor/opt"
+	"github.com/grimdork/opt"
 )
 
 var o struct {
