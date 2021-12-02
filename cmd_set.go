@@ -7,6 +7,7 @@ package main
 
 import (
 	"context"
+	"errors"
 	"os"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
@@ -63,6 +64,19 @@ func (cmd *SetCmd) Run(in []string) error {
 		}
 
 		ppi.Value = aws.String(string(data))
+
+		fi, err := os.Stat(cmd.Value)
+		if err != nil {
+			return err
+		}
+
+		if fi.Size() > 8192 {
+			return errors.New("file size is too large (>8192 bytes)")
+		}
+
+		if fi.Size() > 4096 {
+			ppi.Tier = types.ParameterTierAdvanced
+		}
 	}
 
 	if cmd.List || cmd.Secure {
