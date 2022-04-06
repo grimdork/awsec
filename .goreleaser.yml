@@ -44,7 +44,7 @@ brews:
       name: homebrew-tools
     commit_author:
       name: Urethramancer
-      email: github@grimdiork.net
+      email: github@grimdork.net
     homepage: "https://github.com/grimdork/awsec"
     description: "Store secrets in AWS Parameter Store."
     license: "MIT"
