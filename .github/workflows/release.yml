@@ -44,6 +44,10 @@ jobs:
           echo "name:        ${{ steps.import_gpg.outputs.name }}"
           echo "email:       ${{ steps.import_gpg.outputs.email }}"
       -
+        name: Map secret -> GITHUB_TOKEN
+        run: |
+          echo "GITHUB_TOKEN=${{ secrets.GORELEASER_TOKEN }}" >> $GITHUB_ENV
+      -
         name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v4
         with:
