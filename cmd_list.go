@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Ronny Bangsund
+// Copyright (c) 2021-2026 Ronny Bangsund
 //
 // This software is released under the MIT License.
 // https://opensource.org/licenses/MIT
@@ -15,39 +15,38 @@ import (
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/ssm"
 	"github.com/aws/aws-sdk-go-v2/service/ssm/types"
-	"github.com/grimdork/opt"
+	"github.com/grimdork/climate/arg"
 )
 
-// ListCmd options.
-type ListCmd struct {
-	opt.DefaultHelp
-	Filter string `placeholder:"FILTER" help:"Lists all keys starting with this." default:"/"`
-	Output string `short:"o" help:"Output format." choices:"table,compact,json" default:"table"`
-}
-
-func (cmd *ListCmd) Run(in []string) error {
-	if cmd.Help {
-		return opt.ErrUsage
+func cmdList(opts *arg.Options) error {
+	opt := arg.New("awsec list", "List keys.")
+	opt.SetDefaultHelp(true)
+	opt.SetOption(arg.GroupDefault, "f", "filter", "Lists all keys starting with this.", "/", false, arg.VarString, nil)
+	opt.SetOption(arg.GroupDefault, "o", "output", "Output format.", "table", false, arg.VarString, []any{"table", "compact", "json"})
+	err := opt.Parse(opts.Args)
+	if err != nil {
+		return err
 	}
 
 	client, err := getClient()
 	if err != nil {
-		return nil
+		return err
 	}
 
 	filter := types.ParameterStringFilter{
 		Key:    aws.String("Name"),
 		Option: aws.String("BeginsWith"),
-		Values: []string{validKey(cmd.Filter)},
+		Values: []string{opt.GetString("filter")},
 	}
 	input := &ssm.DescribeParametersInput{
-		MaxResults:       50,
+		MaxResults:       aws.Int32(50),
 		ParameterFilters: []types.ParameterStringFilter{filter},
 	}
 
 	w := &tabwriter.Writer{}
 	jsonout := jsonSecrets{}
-	switch cmd.Output {
+	output := opt.GetString("output")
+	switch output {
 	case "json":
 	case "compact":
 		w.Init(os.Stdout, 0, 8, 1, '\t', 0)
@@ -70,7 +69,7 @@ func (cmd *ListCmd) Run(in []string) error {
 			}
 
 			s := fmt.Sprintf("%s\t%s\t%s\n", *p.Name, p.LastModifiedDate.String(), *p.Description)
-			switch cmd.Output {
+			switch output {
 			case "json":
 				e := jsonSecret{
 					Name:        *p.Name,
@@ -95,7 +94,7 @@ func (cmd *ListCmd) Run(in []string) error {
 		}
 	}
 
-	switch cmd.Output {
+	switch output {
 	case "json":
 		data, err := json.MarshalIndent(jsonout, "", "\t")
 		if err != nil {

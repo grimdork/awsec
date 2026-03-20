@@ -13,29 +13,28 @@ import (
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/ssm"
 	"github.com/aws/aws-sdk-go-v2/service/ssm/types"
-	"github.com/grimdork/opt"
+	"github.com/grimdork/climate/arg"
 )
 
-// GetCmd options.
-type GetCmd struct {
-	opt.DefaultHelp
-	Key  string `placeholder:"KEY" help:"Key to fetch."`
-	Tags bool   `short:"t" help:"Get tags too."`
-}
+func cmdGet(opts *arg.Options) error {
+	opt := arg.New("awsec get", "Get value(s) for a key.")
+	opt.SetDefaultHelp(true)
+	opt.SetPositional("KEY", "Key to fetch.", "", true, arg.VarString)
+	opt.SetFlag(arg.GroupDefault, "t", "tags", "Get tags too.")
 
-func (cmd *GetCmd) Run(in []string) error {
-	if cmd.Help || cmd.Key == "" {
-		return opt.ErrUsage
+	err := opt.Parse(opts.Args)
+	if err != nil {
+		return err
 	}
 
 	client, err := getClient()
 	if err != nil {
-		return nil
+		return err
 	}
 
 	param, err := client.GetParameter(context.Background(), &ssm.GetParameterInput{
-		Name:           aws.String(validKey(cmd.Key)),
-		WithDecryption: true,
+		Name:           aws.String(validKey(opt.GetPosString("KEY"))),
+		WithDecryption: aws.Bool(true),
 	})
 
 	if err != nil {
@@ -64,7 +63,7 @@ func (cmd *GetCmd) Run(in []string) error {
 		pr("%s", *param.Parameter.Value)
 	}
 
-	if cmd.Tags {
+	if opt.GetBool("t") {
 		tags, err := client.ListTagsForResource(context.Background(), &ssm.ListTagsForResourceInput{
 			ResourceId:   param.Parameter.Name,
 			ResourceType: types.ResourceTypeForTaggingParameter,

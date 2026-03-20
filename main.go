@@ -1,23 +1,12 @@
 package main
 
 import (
-	"fmt"
+	"log"
 	"os"
 
-	"github.com/grimdork/opt"
+	"github.com/grimdork/climate/arg"
+	"github.com/grimdork/climate/loglines"
 )
-
-var o struct {
-	opt.DefaultHelp
-	List   ListCmd   `command:"list" help:"List keys." aliases:"ls"`
-	Get    GetCmd    `command:"get" help:"Get value(s) for a key." aliases:"g"`
-	Set    SetCmd    `command:"set" help:"Set the value for a key." aliases:"s"`
-	Tag    TagCmd    `command:"tag" help:"Add tags to a key." aliases:"t"`
-	Rename RenameCmd `command:"rename" help:"Rename key." aliases:"ren,r"`
-	Remove RemoveCmd `command:"remove" help:"Remove key." aliases:"rm"`
-	//	Backup  BackupCmd  `command:"backup" help:"Back up all keys to S3." aliases:"bak"`
-	Version VersionCmd `command:"version" help:"Show version information." aliases:"ver,v"`
-}
 
 var (
 	version = "dev"
@@ -28,25 +17,32 @@ func init() {
 	os.Setenv("AWS_SDK_LOAD_CONFIG", "true")
 }
 
-func main() {
-	a := opt.Parse(&o)
-	if o.Help {
-		a.Usage()
-		return
-	}
+const groupCmd = "Commands"
 
-	err := a.RunCommand(false)
+func main() {
+	opt := arg.New("awsec", "Store secrets in AWS Parameter Store.")
+	opt.SetDefaultHelp(true)
+	opt.SetCommand("list", "List keys.", groupCmd, cmdList, []string{"ls"})
+	opt.SetCommand("get", "Get value(s) for a key.", groupCmd, cmdGet, []string{"g"})
+	opt.SetCommand("set", "Set the value for a key.", groupCmd, cmdSet, []string{"s"})
+	opt.SetCommand("tag", "Add tags to a key.", groupCmd, cmdTag, []string{"t"})
+	opt.SetCommand("rename", "Rename key.", groupCmd, cmdRename, []string{"ren", "r"})
+	opt.SetCommand("remove", "Remove key.", groupCmd, cmdRemove, []string{"rm"})
+	opt.SetCommand("backup", "Back up all keys to S3.", groupCmd, cmdBackup, []string{"bak"})
+	opt.SetCommand("version", "Show version information.", groupCmd, cmdVersion, []string{"ver", "v"})
+
+	err := opt.Parse(os.Args[1:])
 	if err != nil {
-		if err == opt.ErrNoCommand {
-			a.Usage()
+		if err == arg.ErrNoArgs {
 			return
 		}
 
-		pr("Error running command: %s", err.Error())
-		os.Exit(2)
+		if err == arg.ErrRunCommand {
+			return
+		}
+
+		log.Fatalf("Error parsing arguments: %v\n", err)
 	}
 }
 
-func pr(format string, v ...interface{}) {
-	fmt.Printf(format+"\n", v...)
-}
+var pr = loglines.Msg

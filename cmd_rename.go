@@ -11,30 +11,28 @@ import (
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/ssm"
 	"github.com/aws/aws-sdk-go-v2/service/ssm/types"
-	"github.com/grimdork/opt"
+	"github.com/grimdork/climate/arg"
 )
 
-// RenameCmd options.
-type RenameCmd struct {
-	opt.DefaultHelp
-	Key string `placeholder:"KEY" help:"Old key name."`
-	New string `placeholder:"NAME" help:"New name for the key. Contents will be unchanged."`
-}
+func cmdRename(opts *arg.Options) error {
+	opt := arg.New("awsec rename", "Rename key.")
+	opt.SetDefaultHelp(true)
+	opt.SetPositional("KEY", "Old key name.", "", true, arg.VarString)
+	opt.SetPositional("NAME", "New name for the key. Contents will be unchanged.", "", true, arg.VarString)
 
-// Run rename.
-func (cmd *RenameCmd) Run(in []string) error {
-	if cmd.Help || cmd.Key == "" {
-		return opt.ErrUsage
+	err := opt.Parse(opts.Args)
+	if err != nil {
+		return err
 	}
 
 	client, err := getClient()
 	if err != nil {
-		return nil
+		return err
 	}
 
 	param, err := client.GetParameter(context.Background(), &ssm.GetParameterInput{
-		Name:           aws.String(validKey(cmd.Key)),
-		WithDecryption: true,
+		Name:           aws.String(validKey(opt.GetPosString("KEY"))),
+		WithDecryption: aws.Bool(true),
 	})
 
 	if err != nil {
@@ -48,11 +46,11 @@ func (cmd *RenameCmd) Run(in []string) error {
 	filter := types.ParameterStringFilter{
 		Key:    aws.String("Name"),
 		Option: aws.String("Equals"),
-		Values: []string{validKey(cmd.Key)},
+		Values: []string{validKey(opt.GetPosString("KEY"))},
 	}
 
 	dpi := ssm.DescribeParametersInput{
-		MaxResults:       25,
+		MaxResults:       aws.Int32(25),
 		ParameterFilters: []types.ParameterStringFilter{filter},
 	}
 
@@ -62,11 +60,11 @@ func (cmd *RenameCmd) Run(in []string) error {
 	}
 
 	ppi := &ssm.PutParameterInput{
-		Name:        aws.String(validKey(cmd.New)),
+		Name:        aws.String(validKey(opt.GetPosString("NAME"))),
 		Value:       param.Parameter.Value,
 		Type:        param.Parameter.Type,
 		Description: desc.Parameters[0].Description,
-		Overwrite:   true,
+		Overwrite:   aws.Bool(true),
 	}
 	_, err = client.PutParameter(context.Background(), ppi)
 	if err != nil {
@@ -82,7 +80,7 @@ func (cmd *RenameCmd) Run(in []string) error {
 	}
 
 	_, err = client.AddTagsToResource(context.Background(), &ssm.AddTagsToResourceInput{
-		ResourceId:   aws.String(validKey(cmd.New)),
+		ResourceId:   aws.String(validKey(opt.GetPosString("NAME"))),
 		ResourceType: types.ResourceTypeForTaggingParameter,
 		Tags:         tags.TagList,
 	})

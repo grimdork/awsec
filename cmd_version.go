@@ -5,11 +5,19 @@
 
 package main
 
-// VersionCmd options.
-type VersionCmd struct{}
+import (
+	"github.com/grimdork/climate/arg"
+)
 
-// Run tag.
-func (cmd *VersionCmd) Run(in []string) error {
+func cmdVersion(opts *arg.Options) error {
+	opt := arg.New("awsec version", "Show version information.")
+	opt.SetDefaultHelp(true)
+	// No positional args; just parse any remaining args for help support.
+	err := opt.Parse(opts.Args)
+	if err != nil {
+		return err
+	}
+
 	pr("awsec version %s (%s)", version, date)
 	return nil
 }

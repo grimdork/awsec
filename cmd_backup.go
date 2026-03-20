@@ -12,23 +12,22 @@ import (
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/ssm"
 	"github.com/aws/aws-sdk-go-v2/service/ssm/types"
-	"github.com/grimdork/opt"
+	"github.com/grimdork/climate/arg"
 )
 
-// BackupCmd options.
-type BackupCmd struct {
-	opt.DefaultHelp
-	Bucket string `placeholder:"BUCKET" help:"S3 bucket to back up everything to."`
-}
+func cmdBackup(opts *arg.Options) error {
+	opt := arg.New("awsec backup", "Back up all keys to S3.")
+	opt.SetDefaultHelp(true)
+	opt.SetPositional("BUCKET", "S3 bucket to back up everything to.", "", true, arg.VarString)
 
-func (cmd *BackupCmd) Run(in []string) error {
-	if cmd.Help || cmd.Bucket == "" {
-		return opt.ErrUsage
+	err := opt.Parse(opts.Args)
+	if err != nil {
+		return err
 	}
 
 	client, err := getClient()
 	if err != nil {
-		return nil
+		return err
 	}
 
 	filter := types.ParameterStringFilter{
@@ -37,7 +36,7 @@ func (cmd *BackupCmd) Run(in []string) error {
 		Values: []string{validKey("/")},
 	}
 	input := &ssm.DescribeParametersInput{
-		MaxResults:       25,
+		MaxResults:       aws.Int32(25),
 		ParameterFilters: []types.ParameterStringFilter{filter},
 	}
 
