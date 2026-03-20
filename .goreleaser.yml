@@ -1,3 +1,4 @@
+version: 2
 project_name: awsec
 before:
   hooks:
@@ -19,67 +20,15 @@ builds:
       - amd64
       - arm64
 release:
-  prerelease: true
+  prerelease: "true"
 
 archives:
-  - replacements:
-      darwin: Darwin
-      linux: Linux
-      amd64: x86_64
-    wrap_in_directory: true
-    format_overrides:
-    - goos: darwin
-      format: tar.xz
-    - goos: linux
-      format: tar.xz
+  - wrap_in_directory: true
     files:
       - LICENSE
       - README.md
       - policies/*
 
-brews:
-  -
-    tap:
-      owner: grimdork
-      name: homebrew-tools
-    commit_author:
-      name: Urethramancer
-      email: github@grimdork.net
-    homepage: "https://github.com/grimdork/awsec"
-    description: "Store secrets in AWS Parameter Store."
-    license: "MIT"
-    skip_upload: auto
-
-nfpms:
-  -
-    replacements:
-      darwin: macOS
-      linux: Linux
-    vendor: grimdork.net
-    homepage:
-    maintainer: Ronny Bangsund <github@grimdork.net>
-    description:
-    formats:
-      - deb
-      - rpm
-    dependencies:
-    bindir: /usr/bin
-    section: contrib
-    priority: extra
-    contents:
-      - src: LICENSE
-        dst: /usr/share/doc/awsec/LICENSE
-
-      - src: README.md
-        dst: /usr/share/doc/awsec/README.md
-
-      - src: policies/*
-        dst: /usr/share/doc/awsec/examples/policies/
-
-checksum:
-  name_template: 'checksums.txt'
-snapshot:
-  name_template: "{{ .Tag }}-next"
 changelog:
   sort: asc
   filters:
@@ -87,6 +36,52 @@ changelog:
       - '^docs:'
       - '^test:'
 
+brews:
+  - name: awsec
+    repository:
+      owner: grimdork
+      name: homebrew-tools
+    commit_author:
+      name: Grimdork
+      email: github@grimdork.net
+    homepage: "https://github.com/grimdork/awsec"
+    description: "Store secrets in AWS Parameter Store."
+    license: "MIT"
+
+nfpms:
+  - package_name: name
+    vendor: "grimdork.net"
+    maintainer: "Grimdork <github@grimdork.net>"
+    homepage: "https://github.com/grimdork/awsec"
+    license: "MIT"
+    formats:
+      - deb
+      - rpm
+    bindir: /usr/bin
+    section: contrib
+    priority: extra
+    contents:
+      - src: LICENSE
+        dst: /usr/share/doc/awsec/LICENSE
+      - src: README.md
+        dst: /usr/share/doc/awsec/README.md
+      - src: policies/*
+        dst: /usr/share/doc/awsec/examples/policies/
+
+checksum:
+  name_template: 'checksums.txt'
+
 signs:
-  - artifacts: checksum
-    args: ["--batch", "-u", "{{ .Env.GPG_FINGERPRINT }}", "--output", "${signature}", "--detach-sign", "${artifact}"]
+  - id: gpg-sign
+    cmd: gpg
+    args:
+      - --batch
+      - --pinentry-mode
+      - loopback
+      - --local-user
+      - "{{ .Env.GPG_FINGERPRINT }}"
+      - --output
+      - "${signature}"
+      - --detach-sign
+      - "${artifact}"
+    artifacts: binary
