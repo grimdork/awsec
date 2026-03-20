@@ -1,12 +1,12 @@
 module github.com/grimdork/awsec
 
-go 1.24
+go 1.25
 
 require (
 	github.com/aws/aws-sdk-go-v2 v1.41.4
 	github.com/aws/aws-sdk-go-v2/config v1.32.12
 	github.com/aws/aws-sdk-go-v2/service/ssm v1.68.3
-	github.com/grimdork/opt v0.2.1
+	github.com/grimdork/climate v0.25.0
 )
 
 require (
@@ -22,8 +22,4 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/ssooidc v1.35.17 // indirect
 	github.com/aws/aws-sdk-go-v2/service/sts v1.41.9 // indirect
 	github.com/aws/smithy-go v1.24.2 // indirect
-	github.com/davecgh/go-spew v1.1.1 // indirect
-	github.com/grimdork/str v1.0.2 // indirect
-	github.com/jmespath/go-jmespath v0.4.0 // indirect
-	gopkg.in/yaml.v2 v2.4.0 // indirect
 )
