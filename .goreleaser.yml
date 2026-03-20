@@ -49,7 +49,7 @@ brews:
     license: "MIT"
 
 nfpms:
-  - package_name: name
+  - package_name: awsec
     vendor: "grimdork.net"
     maintainer: "Grimdork <github@grimdork.net>"
     homepage: "https://github.com/grimdork/awsec"
