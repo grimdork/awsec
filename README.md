@@ -7,9 +7,9 @@ This tool treats Amazon Web Services Parameter Store as a repository for secrets
 ## Installing
 
 ### Install from source
-If you have Go v1.17 or later installed:
+If you have Go v1.25 or later installed:
 ```
-go install github.com/grimdork/awsec@v0.11.1
+go install github.com/grimdork/awsec@latest
 ```
 
 Or just clone the project with `git clone git@github.com:grimdork/awsec.git` if you want to contribute.
